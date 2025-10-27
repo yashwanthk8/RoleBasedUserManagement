@@ -1,0 +1,4 @@
+@reference "../../styles.css";
+.header{
+  @apply text-2xl font-bold flex justify-center items-center;
+}

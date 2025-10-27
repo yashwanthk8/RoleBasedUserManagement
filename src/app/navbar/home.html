@@ -1,0 +1,27 @@
+<ul class="ul1">
+  <li class="home-logo"><a routerLink="/homePage">RoleBasedUserManagement</a></li>
+  <div class="right-menu">
+    <!-- Show these only when NOT logged in -->
+    <ng-container *ngIf="!isLoggedIn">
+      <li class="login"><a routerLink="/login">Login</a></li>
+      <li class="register"><a routerLink="/register">Register</a></li>
+    </ng-container>
+
+    <!-- Show this only when logged in -->
+    <ng-container *ngIf="isLoggedIn">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold text-sm">
+            {{userInitial}}
+          </div>
+          <span class="text-white text-sm">{{userName}}</span>
+        </div>
+        <button
+          (click)="logout()"
+          class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm transition-colors duration-200">
+          Logout
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</ul>

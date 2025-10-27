@@ -1,0 +1,8 @@
+@reference "../styles.css";
+.ul1 {
+  @apply justify-between flex p-4 font-bold ;
+}
+.right-menu{
+  @apply flex gap-4 font-bold;
+}
+

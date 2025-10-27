@@ -1,0 +1,112 @@
+
+import { Component, inject, OnInit, PLATFORM_ID, Inject, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { User } from '../services/user';
+
+@Component({
+  selector: 'app-user-list',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './user-list.html',
+  styleUrls: ['./user-list.css']
+})
+export class UserList implements OnInit {
+  mockList: any[] = [];
+  loading = true;
+  isAdmin = false;
+  currentUserRole = '';
+  currentUserName = '';
+  editingUser: any = null;
+
+  userService = inject(User);
+  router = inject(Router);
+  cdr = inject(ChangeDetectorRef);
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('authToken');
+      this.currentUserRole = localStorage.getItem('userRole') || '';
+      this.currentUserName = localStorage.getItem('userName') || '';
+      this.isAdmin = this.currentUserRole === 'admin';
+    }
+
+    this.getMockApi();
+  }
+
+  getMockApi() {
+    this.loading = true;
+    this.userService.getUsers().subscribe({
+      next: (res) => {
+        this.mockList = res;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error fetching user list:', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  editUser(user: any) {
+    if (!this.isAdmin) {
+      alert('Access Denied: You do not have permission to edit users');
+      return;
+    }
+    this.editingUser = { ...user };
+  }
+
+  saveUser() {
+    if (!this.editingUser) return;
+
+    this.userService.updateUser(this.editingUser).subscribe({
+      next: () => {
+        alert('User updated successfully');
+        this.editingUser = null;
+        this.getMockApi();
+      },
+      error: (err) => {
+        console.error('Error updating user:', err);
+        alert('Failed to update user');
+      }
+    });
+  }
+
+  cancelEdit() {
+    this.editingUser = null;
+  }
+
+  deleteUser(userId: string) {
+    if (!this.isAdmin) {
+      alert('Access Denied: You do not have permission to delete users');
+      return;
+    }
+
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.userService.deleteUser(userId).subscribe({
+        next: () => {
+          alert('User deleted successfully');
+          this.getMockApi();
+        },
+        error: (err) => {
+          console.error('Error deleting user:', err);
+          alert('Failed to delete user');
+        }
+      });
+    }
+  }
+
+  logout() {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userRole');
+    }
+    this.router.navigate(['/login']);
+  }
+}

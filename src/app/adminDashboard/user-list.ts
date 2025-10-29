@@ -3,15 +3,16 @@ import { Component, inject, OnInit, PLATFORM_ID, Inject, ChangeDetectorRef } fro
 import { HttpClient } from '@angular/common/http';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../services/user';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './user-list.html',
-  styleUrls: ['./user-list.css']
+  styleUrls: ['./user-list.css'],
+  providers: [User]
 })
 export class UserList implements OnInit {
   mockList: any[] = [];
@@ -20,12 +21,32 @@ export class UserList implements OnInit {
   currentUserRole = '';
   currentUserName = '';
   editingUser: any = null;
+  userForm: FormGroup;
+  submitted = false;
 
   userService = inject(User);
   router = inject(Router);
   cdr = inject(ChangeDetectorRef);
+  fb = inject(FormBuilder);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.userForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      role: ['user', Validators.required]
+    });
+  }
+
+  GotoDetails(userId: string, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!this.isAdmin) {
+      alert('Only administrators can view user details');
+      return;
+    }
+    this.router.navigate(['/user-details', userId]);
+  }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -37,6 +58,8 @@ export class UserList implements OnInit {
 
     this.getMockApi();
   }
+
+
 
   getMockApi() {
     this.loading = true;
@@ -60,15 +83,34 @@ export class UserList implements OnInit {
       return;
     }
     this.editingUser = { ...user };
+    this.userForm.patchValue({
+      name: user.name,
+      email: user.email,
+      role: user.role
+    });
+    this.submitted = false;
   }
 
   saveUser() {
+    this.submitted = true;
+
+    if (this.userForm.invalid) {
+      return;
+    }
+
     if (!this.editingUser) return;
 
-    this.userService.updateUser(this.editingUser).subscribe({
+    const updatedUser = {
+      ...this.editingUser,
+      ...this.userForm.value
+    };
+
+    this.userService.updateUser(updatedUser).subscribe({
       next: () => {
         alert('User updated successfully');
         this.editingUser = null;
+        this.submitted = false;
+        this.userForm.reset();
         this.getMockApi();
       },
       error: (err) => {
@@ -80,6 +122,13 @@ export class UserList implements OnInit {
 
   cancelEdit() {
     this.editingUser = null;
+    this.submitted = false;
+    this.userForm.reset();
+  }
+
+  // Getter for easy form field access in template
+  get f() {
+    return this.userForm.controls;
   }
 
   deleteUser(userId: string) {

@@ -1,8 +1,15 @@
-<div class="relative min-h-screen text-white">
-<div class="fixed inset-0 -z-10 h-full w-full items-center px-5 py-10 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
+<div class="relative min-h-screen text-white overflow-hidden">
+  <!-- Background gradient -->
+  <div class="fixed inset-0 -z-10 h-full w-full items-center [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
 
-<app-home></app-home>
+  <!-- Particle animation layers -->
+  <div class="particle-container fixed inset-0 -z-5">
+    <div class="particles particles-1"></div>
+    <div class="particles particles-2"></div>
+    <div class="particles particles-3"></div>
+  </div>
 
-
+  <!-- Content -->
+  <app-home></app-home>
   <router-outlet></router-outlet>
 </div>

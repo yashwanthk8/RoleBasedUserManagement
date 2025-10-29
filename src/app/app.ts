@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { Home } from "./navbar/home";
+
 
 @Component({
   selector: 'app-root',

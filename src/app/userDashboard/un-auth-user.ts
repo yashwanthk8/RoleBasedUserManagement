@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-un-auth-user',
-  imports: [CommonModule,FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './un-auth-user.html',
   styleUrl: './un-auth-user.css'
 })
@@ -23,24 +24,31 @@ mockList: any[] = [];
   cdr = inject(ChangeDetectorRef);
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-
+GotoDetails(userId: string, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    // if (!this.isAdmin) {
+    //   alert('Only administrators can view user details');
+    //   return;
+    // }
+    this.router.navigate(['/user-details', userId]);
+  }
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('authToken');
       this.currentUserRole = localStorage.getItem('userRole') || '';
       this.isAdmin = this.currentUserRole === 'admin';
+      this.currentUserName = localStorage.getItem('userName') || '';
 
-      console.log('Current User Role:', this.currentUserRole);
-      console.log('Is Admin:', this.isAdmin);
-      // alert('You do not have permission to EDIT or DELETE users');
-      // if (!token) {
-      //   alert('You must be logged in to view this page.');
-      //   this.router.navigate(['/login']);
-      //   return;
-      // }
+      if (!token) {
+        this.router.navigate(['/login']);
+        return;
+      }
     }
 
     this.getMockApi();
+    this.cdr.detectChanges(); // Force change detection after initialization
   }
 
   getMockApi() {

@@ -1,0 +1,105 @@
+<div class="flex flex-col items-center mt-10">
+  <div class="w-full max-w-sm bg-white rounded-lg shadow-md overflow-hidden">
+    <!-- Header -->
+    <div class="bg-indigo-500 text-white py-3 px-4">
+      <h2 class="text-xl font-bold text-center">User Information</h2>
+    </div>
+
+    <!-- Content -->
+    <div class="p-4 text-sm">
+      @if(isLoading){
+        <div class="flex justify-center items-center py-6">
+          <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-indigo-600" viewBox="0 0 100 101" fill="none">
+            <path d="M100 50.5908C100 78.2051 ..." fill="currentColor"/>
+            <path d="M93.9676 39.0409 ..." fill="currentFill"/>
+          </svg>
+          <span class="ml-2 text-gray-500 text-sm">Loading user details...</span>
+        </div>
+      }
+      @else {
+        @if(user){
+          <!-- User Avatar and Name -->
+          <div class="flex items-center justify-center mb-6">
+            <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center">
+              <span class="text-2xl font-bold text-indigo-600">{{ user.name.charAt(0).toUpperCase() }}</span>
+            </div>
+          </div>
+
+          <!-- User Details Grid -->
+          <div class="grid gap-4">
+            <!-- Name Section -->
+            <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div class="flex items-center">
+                 <svg class="w-5 h-5 text-indigo-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                <div class="flex-1">
+                  <label class="block text-xs font-medium text-gray-500">Full Name</label>
+                  <p class="mt-0.5 text-base font-semibold text-gray-900">{{ user.name }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Section -->
+            <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div class="flex items-center">
+               <svg class="w-5 h-5 text-indigo-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                <div class="flex-1">
+                  <label class="block text-xs font-medium text-gray-500">Email Address</label>
+                  <p class="mt-0.5 text-base font-semibold text-gray-900">{{ user.email }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Role Section -->
+            <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div class="flex items-center">
+                 <svg class="w-5 h-5 text-indigo-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                </svg>
+                <div class="flex-1">
+                  <label class="block text-xs font-medium text-gray-500">Role</label>
+                  <p class="mt-0.5">
+                    <span [ngClass]="user.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200' : 'bg-green-100 text-green-800 border-green-200'"
+                          class="px-2 py-0.5 rounded-full text-xs font-medium border">
+                      {{ user.role | uppercase }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+        @else {
+          <div class="text-center py-6">
+            <div class="bg-red-50 rounded-lg p-3 border border-red-100">
+              <svg class="w-8 h-8 text-red-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01..." />
+              </svg>
+              <h3 class="text-base font-medium text-red-800">User Not Found</h3>
+              <p class="text-xs text-red-600 mt-1">The requested user details could not be loaded.</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Footer with Action Buttons -->
+    <div class="border-t border-gray-200 px-4 py-3 bg-gray-50 flex justify-between items-center text-sm">
+      <button (click)="goBack()"
+              class="flex items-center px-3 py-1.5 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-colors duration-200">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back
+      </button>
+      @if(user && isAdmin){
+        <button class="px-3 py-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">
+          Edit User
+        </button>
+      }
+    </div>
+  </div>
+</div>

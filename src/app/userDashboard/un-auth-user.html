@@ -23,17 +23,17 @@
 
 
   <!-- Table -->
-  <table *ngIf="!loading" class="border border-gray-400 rounded-md shadow-md w-3/4">
+  <table *ngIf="!loading" class="border border-gray-400 rounded-md shadow-md w-3/7">
     <thead class="bg-indigo-500 text-white">
       <tr>
         <th class="py-2 px-4">Name</th>
         <th class="py-2 px-4">Email</th>
         <th class="py-2 px-4">Role</th>
-        <th *ngIf="isAdmin" class="py-2 px-4">Actions</th>
+
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let pat of mockList" class="text-center border-b hover:bg-amber-950">
+      <tr *ngFor="let pat of mockList" class="text-center border-b hover:bg-amber-950" (click)="GotoDetails(pat.id)">
         <td class="py-2">{{ pat.name }}</td>
         <td class="py-2">{{ pat.email }}</td>
         <td class="py-2">
@@ -46,20 +46,7 @@
             {{ pat.role }}
           </span>
         </td>
-        <td *ngIf="isAdmin" class="py-2">
-          <button
-            (click)="editUser(pat)"
-            class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mr-2 text-sm"
-          >
-            Edit
-          </button>
-          <button
-            (click)="deleteUser(pat.id)"
-            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-          >
-            Delete
-          </button>
-        </td>
+
       </tr>
     </tbody>
   </table>

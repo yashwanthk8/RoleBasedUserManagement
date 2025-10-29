@@ -14,6 +14,7 @@ export class Home implements OnInit {
   isLoggedIn: boolean = false;
   userName: string = '';
   userInitial: string = '';
+  isAdmin: boolean = false;
 
   constructor(
     private router: Router,
@@ -26,6 +27,9 @@ export class Home implements OnInit {
       // Subscribe to auth status changes
       this.authService.isLoggedIn$.subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn;
+        if (isLoggedIn) {
+          this.isAdmin = localStorage.getItem('userRole') === 'admin';
+        }
       });
 
       this.authService.userName$.subscribe(userName => {

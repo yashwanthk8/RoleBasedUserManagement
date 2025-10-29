@@ -5,8 +5,8 @@ import { authGuard } from './services/auth.guard';
 import { UserList } from './adminDashboard/user-list';
 import { roleGuard } from './services/role.guard';
 import { UnAuthUser } from './userDashboard/un-auth-user';
-import { Home } from './navbar/home';
 import { Homepage } from './homepage/homepage';
+import { UserDetails } from './user-details/user-details';
 
 export const routes: Routes = [
   { path: '', component: Homepage },
@@ -22,6 +22,8 @@ export const routes: Routes = [
     path: 'userDashboard',
     component: UnAuthUser,
     canActivate: [authGuard],
+    data: { allowAdmin: true }
   },
+  { path: 'user-details/:id', component: UserDetails , canActivate: [authGuard], },
   { path: '**', redirectTo: 'login' }
 ];

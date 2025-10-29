@@ -14,11 +14,18 @@ export class User {
     return this.http.get<any[]>(API_BASE);
   }
 
+  getUserById(id: string): Observable<any> {
+    return this.http.get<any>(`${API_BASE}/${id}`);
+  }
+
   updateUser(user: any): Observable<any> {
     return this.http.put(`${API_BASE}/${user.id}`, user);
   }
 
   deleteUser(userId: string): Observable<any> {
     return this.http.delete(`${API_BASE}/${userId}`);
+  }
+  getRoles(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_BASE}/roles`);
   }
 }

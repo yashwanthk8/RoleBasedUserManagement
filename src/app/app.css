@@ -1,8 +1,89 @@
 @reference "../styles.css";
 .ul1 {
-  @apply justify-between flex p-4 font-bold ;
+  @apply justify-between flex p-4 font-bold;
 }
-.right-menu{
+.right-menu {
   @apply flex gap-4 font-bold;
 }
 
+/* Particle Animation Styles */
+.particle-container {
+  pointer-events: none;
+}
+
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: particles 20s linear infinite;
+}
+
+.particles::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle at center, white 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.3;
+}
+
+.particles-1::before {
+  animation: particles1 60s linear infinite;
+}
+
+.particles-2::before {
+  animation: particles2 75s linear infinite;
+  background-size: 16px 16px;
+  opacity: 0.1;
+}
+
+.particles-3::before {
+  animation: particles3 90s linear infinite;
+  background-size: 20px 20px;
+  opacity: 0.1;
+}
+
+@keyframes particles1 {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  100% {
+    transform: translateY(-100%) translateX(20%);
+  }
+}
+
+@keyframes particles2 {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-100%) translateX(-20%) rotate(45deg);
+  }
+}
+
+@keyframes particles3 {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-100%) translateX(10%) rotate(-45deg);
+  }
+}
+
+/* Ensure particles loop seamlessly */
+.particles {
+  will-change: transform;
+}
+
+.particles::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 100%;
+  left: 0;
+  background-image: inherit;
+}
